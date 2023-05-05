@@ -107,5 +107,28 @@ output
 1 3 2 0 0 1 0 1 
 """
 
-def random_walk():
-    pass
+def random_walk(input):
+    """
+    Print n
+    numbers: expected values of c(v)
+    modulo 998244353
+    for each v
+    from 1
+    to n
+    .
+
+    Formally, let M=998244353
+    . It can be shown that the answer can be expressed as an irreducible fraction pq
+    , where p
+    and q
+    are integers and q≢0(modM)
+    . Output the integer equal to p⋅q−1modM
+    . In other words, output such an integer x
+    that 0≤x<M
+    and x⋅q≡p(modM)
+    .
+    """
+    integer_list = [int(i) for i in input.split()]
+    values = []
+    probabilities = []
+    expected_value = sum(values)/sum(values)
