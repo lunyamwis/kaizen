@@ -1,82 +1,100 @@
-var n = 8;
-
-solveNQ();
-
-function printSolution(board){
-  for(var i=0; i<n; i++){
-    for(var j=0; j<n; j++){
-      document.write(" "+board[i][j]+" ");
+// JavaScript program to solve N Queen
+// Problem using backtracking
+const N = 4
+ 
+function printSolution(board)
+{
+    for(let i = 0; i < N; i++)
+    {
+        for(let j = 0; j < N; j++)
+        {
+            document.write(board[i][j], " ")
+        }
+        document.write("</br>")
     }
-    document.write("<br>");
-  }
-  document.write("<br>");
 }
-
-function isSafe(board, row, col){
-
-  // Checks the ← direction
-  for(var i=0; i<col; i++){
-    if (board[row][i] === 1) {
-      return false;
+ 
+// A utility function to check if a queen can
+// be placed on board[row][col]. Note that this
+// function is called when "col" queens are
+// already placed in columns from 0 to col -1.
+// So we need to check only left side for
+// attacking queens
+function isSafe(board, row, col)
+{
+ 
+    // Check this row on left side
+    for(let i = 0; i < col; i++){
+        if(board[row][i] == 1)
+            return false 
     }
-  }
-
-  // Checks the ↖ direction 
-  for(var i=row, j=col; i>=0 && j>=0; i--, j--){
-    if (board[i][j] === 1) {
-      return false;
-    }
-  }
-
-  // Checks the ↙ direction 
-  for(var i=row, j=col; j>=0 && i<n; i++, j--){
-    if (board[i][j] === 1){
-      return false;
-    }
-  }
-
-  return true;
+ 
+    // Check upper diagonal on left side
+    for (i = row, j = col; i >= 0 && j >= 0; i--, j--)
+        if (board[i][j])
+            return false
+ 
+    // Check lower diagonal on left side
+    for (i = row, j = col; j >= 0 && i < N; i++, j--)
+        if (board[i][j])
+            return false
+ 
+    return true
 }
-
-
-function recurseNQ(board, col){
-  if(col===n){
-      printSolution(board); // <-- print another solution when n==8
-    return;  
-  }
-
-  for(var i=0; i<n; i++){
-    if(isSafe(board, i, col)){
-      board[i][col]=1;
-
-      recurseNQ(board, col+1);
-      //if(recurseNQ(board, col+1)===true) //<-- you don't need this
-          // return true;
-
-      board[i][col]=0;
+ 
+function solveNQUtil(board, col){
+     
+    // base case: If all queens are placed
+    // then return true
+    if(col >= N)
+        return true
+ 
+    // Consider this column and try placing
+    // this queen in all rows one by one
+    for(let i=0;i<N;i++){
+ 
+        if(isSafe(board, i, col)==true){
+             
+            // Place this queen in board[i][col]
+            board[i][col] = 1
+ 
+            // recur to place rest of the queens
+            if(solveNQUtil(board, col + 1) == true)
+                return true
+ 
+            // If placing queen in board[i][col
+            // doesn't lead to a solution, then
+            // queen from board[i][col]
+            board[i][col] = 0
+        }
     }
-  }
-  return false;
+    // if the queen can not be placed in any row in
+    // this column col then return false
+    return false
 }
-
-
+ 
+// This function solves the N Queen problem using
+// Backtracking. It mainly uses solveNQUtil() to
+// solve the problem. It returns false if queens
+// cannot be placed, otherwise return true and
+// placement of queens in the form of 1s.
+// note that there may be more than one
+// solutions, this function prints one of the
+// feasible solutions.
 function solveNQ(){
-  var board = generateBoard(n);
-  recurseNQ(board, 0);
-  //if(recurseNQ(board, 0)===false){
-    //console.log("No solution found");
-   // return false;
- // }
- // printSolution(board);
-}
-
-function generateBoard(n){
-  var board=[];
-  for(var i=0; i<n; i++){
-    board[i]=[];
-    for(var j=0; j<n; j++){
-      board[i][j]=0;
+    let board = [ [0, 0, 0, 0],
+              [0, 0, 0, 0],
+              [0, 0, 0, 0],
+              [0, 0, 0, 0] ]
+ 
+    if(solveNQUtil(board, 0) == false){
+        document.write("Solution does not exist")
+        return false
     }
-  }
-  return board;
+ 
+    printSolution(board)
+    return true
 }
+ 
+// Driver Code
+solveNQ()
