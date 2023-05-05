@@ -129,6 +129,4 @@ def random_walk(input):
     .
     """
     integer_list = [int(i) for i in input.split()]
-    values = []
-    probabilities = []
-    expected_value = sum(values)/sum(values)
+    
