@@ -86,14 +86,14 @@ input
 1 2
 2 3
 output
-2 2 1 
+2 2 1
 input
 4 1 3
 1 2
 2 3
 1 4
 output
-4 2 1 2 
+4 2 1 2
 input
 8 2 6
 6 4
@@ -104,8 +104,9 @@ input
 7 4
 8 2
 output
-1 3 2 0 0 1 0 1 
+1 3 2 0 0 1 0 1
 """
+
 
 def random_walk():
     pass
