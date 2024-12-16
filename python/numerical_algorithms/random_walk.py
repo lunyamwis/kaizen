@@ -1,111 +1,62 @@
-"""
-F. Random Walk
-time limit per test2 seconds
-memory limit per test256 megabytes
-inputstandard input
-outputstandard output
-You are given a tree consisting of n
- vertices and n−1
- edges, and each vertex v
- has a counter c(v)
- assigned to it.
-
-Initially, there is a chip placed at vertex s
- and all counters, except c(s)
-, are set to 0
-; c(s)
- is set to 1
-.
-
-Your goal is to place the chip at vertex t
-. You can achieve it by a series of moves. Suppose right now the chip is placed at the vertex v
-. In one move, you do the following:
-
-choose one of neighbors to
- of vertex v
- uniformly at random (to
- is neighbor of v
- if and only if there is an edge {v,to}
- in the tree);
-move the chip to vertex to
- and increase c(to)
- by 1
-;
-You'll repeat the move above until you reach the vertex t
-.
-
-For each vertex v
- calculate the expected value of c(v)
- modulo 998244353
-.
-
-Input
-The first line contains three integers n
-, s
- and t
- (2≤n≤2⋅105
-; 1≤s,t≤n
-; s≠t
-) — number of vertices in the tree and the starting and finishing vertices.
-
-Next n−1
- lines contain edges of the tree: one edge per line. The i
--th line contains two integers ui
- and vi
- (1≤ui,vi≤n
-; ui≠vi
-), denoting the edge between the nodes ui
- and vi
-.
-
-It's guaranteed that the given edges form a tree.
-
-Output
-Print n
- numbers: expected values of c(v)
- modulo 998244353
- for each v
- from 1
- to n
-.
-
-Formally, let M=998244353
-. It can be shown that the answer can be expressed as an irreducible fraction pq
-, where p
- and q
- are integers and q≢0(modM)
-. Output the integer equal to p⋅q−1modM
-. In other words, output such an integer x
- that 0≤x<M
- and x⋅q≡p(modM)
-.
-
-Examples
-input
-3 1 3
-1 2
-2 3
-output
-2 2 1 
-input
-4 1 3
-1 2
-2 3
-1 4
-output
-4 2 1 2 
-input
-8 2 6
-6 4
-6 2
-5 4
-3 1
-2 3
-7 4
-8 2
-output
-1 3 2 0 0 1 0 1 
-"""
+from sys import setrecursionlimit
+import threading
+mod = 998244353
 
 def random_walk():
-    pass
+    n, s, t = map(int, input().split())
+    s -= 1
+    t -= 1
+    
+    g = [[] for i in range(0, n)]
+    previous = [-1 for i in range(0, n)]
+    inPath = [False for i in range(0, n)]
+    res = [0 for i in range(0, n)]
+    
+    for i in range(0, n - 1):
+        a, b = map(int, input().split())
+        a -= 1
+        b -= 1
+        g[a].append(b)
+        g[b].append(a)
+    
+    def dfs(v, p):
+        for to in g[v]:
+            if to == p:
+                continue
+            previous[to] = v
+            dfs(to, v)
+    
+    def dfs2(v, p, k):
+        res[v] = k * len(g[v])
+        for to in g[v]:
+            if to == p:
+                continue
+            dfs2(to, v, k)
+    
+    dfs(s, -1)
+    
+    ptr = t
+    inPath[t] = True
+    
+    while ptr != s:
+        res[previous[ptr]] = res[ptr] + 2
+        ptr = previous[ptr]
+        inPath[ptr] = True
+    
+    for v in range(0, n):
+        if inPath[v]:
+            res[v] = res[v] // 2 * len(g[v])
+            for to in g[v]:
+                if not inPath[to]:
+                    dfs2(to, v, res[v] // len(g[v]))
+    
+    res[t] += 1
+    
+    for i in res:
+        print(i % mod, end = ' ')
+    print("")
+ 
+setrecursionlimit(10 ** 9)
+threading.stack_size(2 ** 27)
+thread = threading.Thread(target=random_walk)
+thread.start()
